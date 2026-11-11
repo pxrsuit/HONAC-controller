@@ -15,3 +15,8 @@ Om dit programma te installeren download je de nieuwste release of de source cod
 ## Keybinds aanpassen
 
 Speel je op een andere server of gebruik je andere keybinds dan de standaard? Pas deze aan in het `app.py` bestand.
+
+## Voorbeeld
+
+Voorbeeld van de mobiele app:
+<image src="https://cdn.rotterdamresponse.xyz/media/4aa55a69-0b9a-4b9f-bd56-f6113943d94c.png" alt="Preview">
