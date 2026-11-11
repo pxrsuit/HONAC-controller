@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HONAC H-ECU Remote</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #111;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            user-select: none;
+            touch-action: manipulation;
+            overflow: hidden;
+        }
+        
+        .panel {
+            background: linear-gradient(145deg, #3b4b54, #1e282e);
+            /* Vult 95% van het scherm, max 1200px breed op PC */
+            width: 95vw;
+            max-width: 1200px;
+            padding: clamp(15px, 4vw, 50px) clamp(10px, 3vw, 40px);
+            border-radius: clamp(8px, 1vw, 15px);
+            box-shadow: 10px 10px 30px rgba(0,0,0,0.9), inset 2px 2px 5px rgba(255,255,255,0.1);
+            border: clamp(2px, 0.3vw, 4px) solid #111;
+            position: relative;
+                        display: grid;
+            grid-template-columns: 1fr 3fr 2fr;
+            gap: clamp(10px, 2vw, 30px);
+            box-sizing: border-box;
+        }
+
+        .panel-text-top { 
+            position: absolute; 
+            top: clamp(5px, 1vw, 15px); 
+            left: clamp(10px, 2vw, 25px); 
+            color: #8fa2b1; 
+            font-size: clamp(8px, 1.5vw, 14px); 
+            font-weight: bold; 
+            letter-spacing: 1px; 
+        }
+        .panel-text-bottom { 
+            position: absolute; 
+            bottom: clamp(5px, 1vw, 15px); 
+            left: clamp(10px, 2vw, 25px); 
+            color: #8fa2b1; 
+            font-size: clamp(7px, 1.2vw, 12px); 
+            font-weight: bold; 
+            letter-spacing: 1px; 
+        }
+
+        .left-group { 
+            display: grid; 
+            grid-template-columns: 1fr; 
+            gap: clamp(8px, 1.5vw, 20px); 
+            align-content: center;
+        }
+        .middle-group { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: clamp(8px, 1.5vw, 20px); 
+            align-content: center;
+        }
+        .right-group { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: clamp(8px, 1.5vw, 20px); 
+            align-content: center;
+        }
+
+        .btn {
+            width: 100%;
+            aspect-ratio: 1 / 1; /* Zorgt dat knoppen perfect vierkant blijven */
+            background-color: #151515;
+            border: clamp(1px, 0.3vw, 4px) solid #666;
+            border-radius: clamp(4px, 0.5vw, 8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.1s;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+            box-sizing: border-box;
+        }
+
+        .btn:active { transform: scale(0.95); }
+
+        .btn img {
+            width: 75%;
+            height: 75%;
+            object-fit: contain;
+            opacity: 0.15;
+            transition: opacity 0.1s, filter 0.1s;
+        }
+
+        .btn-text { 
+            color: #666; 
+            font-weight: bold; 
+            font-size: clamp(16px, 3vw, 40px); 
+            opacity: 0.5; 
+            transition: all 0.2s; 
+        }
+
+        .btn.active img, .btn.active .btn-text { opacity: 1; }
+        
+        .btn.active.red { border-color: #ff2222; box-shadow: 0 0 20px #ff2222, inset 0 0 15px #ff2222; }
+        .btn.active.red img { filter: drop-shadow(0 0 10px #ff2222); }
+        
+        .btn.active.blue { border-color: #00aaff; box-shadow: 0 0 20px #00aaff, inset 0 0 15px #00aaff; }
+        .btn.active.blue img { filter: drop-shadow(0 0 10px #00aaff); }
+        
+        .btn.active.green { border-color: #00ff00; box-shadow: 0 0 20px #00ff00, inset 0 0 15px #00ff00; }
+        .btn.active.green img { filter: drop-shadow(0 0 10px #00ff00); }
+        
+        .btn.active.amber { border-color: #ffaa00; box-shadow: 0 0 20px #ffaa00, inset 0 0 15px #ffaa00; }
+        .btn.active.amber img { filter: drop-shadow(0 0 10px #ffaa00); }
+        
+        .btn.active.white { border-color: #ffffff; box-shadow: 0 0 20px #ffffff, inset 0 0 15px #ffffff; }
+        .btn.active.white img, .btn.active.white .btn-text { filter: drop-shadow(0 0 10px #ffffff); color: #fff; }
+
+        @keyframes flash { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .btn.active.blue img { animation: flash 0.8s infinite; }
+        .btn.active.red img { animation: flash 0.8s infinite; }
+    </style>
+</head>
+<body>
+
+<div class="panel">
+    <div class="panel-text-top">HONAC NEDERLAND</div>
+    <div class="panel-text-bottom">H-ECU REMOTE</div>
+
+    <div class="left-group">
+        <div class="btn red" id="siren" onclick="toggle('siren')"><img src="/static/siren.png"></div>
+        <div class="btn blue" id="blue" onclick="toggle('blue')"><img src="/static/blue.png"></div>
+    </div>
+
+    <div class="middle-group">
+        <div class="btn white" id="flood_l" onclick="toggle('flood_l')"><img src="/static/flood_l.png"></div>
+        <div class="btn white" id="horn" onclick="toggle('horn')"><img src="/static/horn.png"></div>
+        <div class="btn white" id="flood_r" onclick="toggle('flood_r')"><img src="/static/flood_r.png"></div>
+
+        <div class="btn white" id="stop_up" onclick="toggle('stop_up')"><img src="/static/stop_up.png"></div>
+        <div class="btn white" id="stop_down" onclick="toggle('stop_down')"><img src="/static/stop_down.png"></div>
+        <div class="btn white" id="volg" onclick="toggle('volg')"><img src="/static/volg.png"></div>
+    </div>
+
+    <div class="right-group">
+        <div class="btn green" id="green" onclick="toggle('green')"><img src="/static/green.png"></div>
+        <div class="btn white" id="kk" onclick="toggle('kk')"><span class="btn-text">KK</span></div>
+        
+        <div class="btn amber" id="amber" onclick="toggle('amber')"><img src="/static/amber.png"></div>
+        <div class="btn white" id="power" onclick="toggle('power')"><span class="btn-text">⏻</span></div>
+    </div>
+</div>
+
+<script>
+    let state = {
+        'siren': false, 'blue': false, 'flood_l': false, 'flood_r': false, 
+        'horn': false, 'green': false, 'amber': false, 
+        'stop_up': false, 'stop_down': false, 'volg': false, 
+        'kk': false, 'power': false
+    };
+
+    function toggle(btn) {
+        fetch('/toggle', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ button: btn })
+        }).then(res => res.json()).then(data => {
+            state = data;
+            updateUI();
+        }).catch(err => console.error("Fout:", err));
+    }
+
+    function updateUI() {
+        for (let key in state) {
+            let el = document.getElementById(key);
+            if (!el) continue; 
+            
+            if (state[key]) {
+                el.classList.add('active');
+            } else {
+                el.classList.remove('active');
+            }
+        }
+    }
+</script>
+</body>
+</html>
