@@ -27,7 +27,7 @@ state = {
 
 keys = {
     'green': '4', 'amber': '2',
-    'kk': '', 'power': '' # Leeg gelaten op basis van jouw input
+    'kk': '', 'power': '' # EMPTY CONFIG FOR NLPDFR
 }
 
 stop_beeping = True
